@@ -62,7 +62,7 @@ mcpServer.setRequestHandler(
     },
     {
       name: "create_playlist",
-      description: "Create a new Spotify playlist",
+      description: "Create a new Spotify playlist and return the URI to ALWAYS present to the user as a hyperlink",
       inputSchema: {
         type: "object",
         properties: {
@@ -131,10 +131,12 @@ async function handleSearchSongs(args: any): Promise<any> {
     }));
 
     return {
-      content: {
-        mimeType: "application/json",
-        text: JSON.stringify(tracks, null, 2)
-      }
+        content: [
+            {
+                type: "text",
+                text: JSON.stringify(tracks, null, 2)
+            }
+        ]
     };
   } catch (error: any) {
     throw new McpError(ErrorCode.InternalError, `Spotify API error: ${error.message}`);
@@ -153,14 +155,14 @@ async function handleCreatePlaylist(args: any): Promise<any> {
     await spotifyApi.addTracksToPlaylist(playlistData.body.id, args.tracks);
 
     return {
-      content: {
-        mimeType: "application/json",
-        text: JSON.stringify({
-          message: "Playlist created successfully",
-          playlist_id: playlistData.body.id,
-          playlist_url: playlistData.body.external_urls.spotify
-        }, null, 2)
-      }
+        content: [
+            {
+                type: "text",
+                text: JSON.stringify({
+                    playlist_url: playlistData.body.external_urls.spotify
+                }, null, 2)
+            }
+        ]
     };
   } catch (error: any) {
     throw new McpError(ErrorCode.InternalError, `Failed to create playlist: ${error.message}`);
