@@ -1,29 +1,17 @@
 # SpotifyMCP MCP Server
 
-Context Protocol Server for Spotify
-
-This is a TypeScript-based MCP server that implements a simple notes system. It demonstrates core MCP concepts by providing:
-
-- Resources representing text notes with URIs and metadata
-- Tools for creating new notes
-- Prompts for generating summaries of notes
+This is a TypeScript-based MCP server for Spotify.
 
 ## Features
 
-### Resources
-- List and access notes via `note://` URIs
-- Each note has a title, content and metadata
-- Plain text mime type for simple content access
-
 ### Tools
-- `create_note` - Create new text notes
-  - Takes title and content as required parameters
-  - Stores note in server state
+- `create_playlist` - Create a new Spotify playlist.
+  - Takes name, description, tracks, and public status as parameters.
+  - Returns the URI of the created playlist.
 
 ### Prompts
-- `summarize_notes` - Generate a summary of all stored notes
-  - Includes all note contents as embedded resources
-  - Returns structured prompt for LLM summarization
+- `search_songs` - Search for songs on Spotify.
+  - Takes a search query and an optional limit for results.
 
 ## Development
 
@@ -55,11 +43,12 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
     "SpotifyMCP": {
       "command": "node",
       "args": [
-        "/Users/carl.lapierre/Documents/SideProjects/MCPs/spotify-mcp/build/index.js"
+        "/Users/your_username/Documents/SideProjects/MCPs/spotify-mcp/build/index.js"
       ],
       "env": {
         "SPOTIFY_CLIENT_ID": "your_client_id_here",
-        "SPOTIFY_CLIENT_SECRET": "your_client_secret_here"
+        "SPOTIFY_CLIENT_SECRET": "your_client_secret_here",
+        "SPOTIFY_REFRESH_TOKEN": "your_refresh_token_here"
       }
     },
   }
@@ -76,17 +65,35 @@ npm run inspector
 
 The Inspector will provide a URL to access debugging tools in your browser.
 
+## Setup Instructions
 
+1. **Create a Spotify Developer Account**  
+   Visit [Spotify Developer](https://developer.spotify.com/) and create an account.
 
+2. **Create a New Application**  
+   After logging in, create a new application to obtain your **Client ID** and **Client Secret**.
 
+3. **Set Up Redirect URI**  
+   In your Spotify application settings, configure the redirect URI to:  
+   ```
+   http://localhost:8888/callback
+   ```
 
-Create a Spotify Developer account at https://developer.spotify.com/
-Create a new application to get your Client ID and Client Secret
-Set up the redirect URI in your Spotify application settings
-Let me know when you've completed these steps and I'll help you with the next part!
+4. **Create a `.env` File**  
+   In the root of your project, create a `.env` file and add the following environment variables:
+   ```plaintext
+   SPOTIFY_CLIENT_ID=your_client_id_here
+   SPOTIFY_CLIENT_SECRET=your_client_secret_here
+   SPOTIFY_REDIRECT_URI=http://localhost:8888/callback
+   ```
 
+5. **Get Your Spotify Token**  
+   Run the following command to obtain your Spotify token:
+   ```bash
+   npx ts-node src/scripts/get-spotify-token.ts
+   ```
 
-npx ts-node get-spotify-token.ts
-Visit http://localhost:8888/login in your browser
-Copy the refresh token and set it in your environment variables:
-SPOTIFY_REFRESH_TOKEN=your_refresh_token_here
+6. **Login to Your Application**  
+   Visit http://localhost:8888/login in your browser
+   Copy the refresh token and set it in your environment variables:
+   SPOTIFY_REFRESH_TOKEN=your_refresh_token_here
