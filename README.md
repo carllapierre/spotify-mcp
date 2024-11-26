@@ -1,6 +1,6 @@
 # SpotifyMCP MCP Server
 
-This is a TypeScript-based MCP server for Spotify.
+This is a TypeScript-based MCP server for Spotify based on the [Model Context Protocol](https://modelcontextprotocol.io/introduction).
 
 ## Features
 
